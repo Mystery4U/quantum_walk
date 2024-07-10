@@ -2,18 +2,19 @@
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
+import csv
 from qutip import basis, mesolve, Qobj, ket2dm
 
 epsilon = 0.1
-rate = 0.1
+rate = 0.3
 seed = 42
-G = nx.erdos_renyi_graph(n=100, p=0.05, seed=seed)
+G = nx.erdos_renyi_graph(n=10, p=0.5, seed=seed)
 # G = nx.cycle_graph(50)
 
 basis_states = [basis(len(G.nodes), i) for i in range(len(G.nodes))]
 
 initial_density_matrix = ket2dm(sum(basis_states).unit())
-target_state_index = 1
+target_state_index = 4
 target_state = basis_states[target_state_index]
 
 diagonals = []
@@ -37,7 +38,7 @@ def jumps(graph, eps):
 def quantumwalk(graph, initial_density, target_state, jump_operators, r):
     H_q = Qobj(nx.normalized_laplacian_matrix(G))
     H_w = -1 * Qobj(target_state * target_state.dag())
-    H = H_q + H_w
+    H = (1 - epsilon) * (H_q + H_w)
     reset_time = 1/r
     times = np.linspace(0.0, reset_time, 1000)
     result = mesolve(H, initial_density, times, jump_operators, [])
@@ -56,7 +57,7 @@ def initial_condition(top_basis):
     return ket2dm(initial_state.unit())
 
 
-iterations = 4
+iterations = 5
 density = initial_density_matrix
 fig, ax = plt.subplots()
 for i in range(iterations):
@@ -70,5 +71,5 @@ for i in range(iterations):
 reshaped_diagonals = np.einsum('ijk->jik', diagonals).reshape(len(G.nodes), iterations * 1000)
 for i, sublist in enumerate(reshaped_diagonals):
     plt.plot(np.linspace(0, iterations * 1 / rate, iterations * 1000), sublist)
-
+    np.savetxt(f"quantum_walk_reset_node_{i}_reset_5_03.txt", np.column_stack((np.linspace(0, iterations * 1 / rate, iterations * 1000), sublist)), header="Time\tProbability", delimiter="\t")
 plt.show()

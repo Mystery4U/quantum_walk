@@ -7,7 +7,8 @@ import matplotlib.pyplot as plt
 
 # Define the graph
 seed = 42
-G = nx.erdos_renyi_graph(n=6, p=0.5, seed=seed)
+# G = nx.erdos_renyi_graph(n=6, p=0.5, seed=seed)
+G = nx.path_graph(5)
 # G = nx.cycle_graph(4)
 # G = nx.Graph()
 # nodes = [0, 1, 2, 3, 4]
@@ -57,8 +58,8 @@ def simulate_walker(graph, start_node, steps):
     return probabilities
 
 
-start_node = 0
-total_steps = 5000
+start_node = 2
+total_steps = 100000
 
 probabilities = simulate_walker(G, start_node, total_steps)
 average = {node: sum(prob[node] for prob in probabilities) / total_steps for node in G.nodes()}

@@ -40,9 +40,9 @@ plt.ylabel('Frequency')
 plt.title('Distribution of Nodes Visited in Random Walks')
 plt.savefig('random_walk_histogram.png')
 plt.show()
-
-with open('random_walk_data.csv', 'w', newline='') as csvfile:
-    writer = csv.writer(csvfile)
-    writer.writerow(['Node', 'Frequency'])
-    for i in range(len(hist)):
-        writer.writerow([bins[i], hist[i]])
+#
+# with open('random_walk_data.csv', 'w', newline='') as csvfile:
+#     writer = csv.writer(csvfile)
+#     writer.writerow(['Node', 'Frequency'])
+#     for i in range(len(hist)):
+#         writer.writerow([bins[i], hist[i]])
