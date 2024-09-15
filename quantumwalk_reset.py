@@ -8,7 +8,7 @@ from qutip import basis, mesolve, Qobj, ket2dm
 epsilon = 0.1
 rate = 0.3
 seed = 42
-G = nx.erdos_renyi_graph(n=10, p=0.5, seed=seed)
+G = nx.erdos_renyi_graph(n=50, p=0.1, seed=seed)
 # G = nx.cycle_graph(50)
 
 basis_states = [basis(len(G.nodes), i) for i in range(len(G.nodes))]
@@ -70,6 +70,8 @@ for i in range(iterations):
 
 reshaped_diagonals = np.einsum('ijk->jik', diagonals).reshape(len(G.nodes), iterations * 1000)
 for i, sublist in enumerate(reshaped_diagonals):
-    plt.plot(np.linspace(0, iterations * 1 / rate, iterations * 1000), sublist)
-    np.savetxt(f"quantum_walk_reset_node_{i}_reset_5_03.txt", np.column_stack((np.linspace(0, iterations * 1 / rate, iterations * 1000), sublist)), header="Time\tProbability", delimiter="\t")
+    plt.plot(np.linspace(0, iterations * 1 / rate, iterations * 1000), sublist, label='Node {}'.format(i))
+    # np.savetxt(f"quantum_walk_reset_node_{i}_reset_5_03.txt", np.column_stack((np.linspace(0, iterations * 1 / rate, iterations * 1000), sublist)), header="Time\tProbability", delimiter="\t")
+
+plt.legend()
 plt.show()

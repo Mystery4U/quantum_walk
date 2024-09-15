@@ -10,11 +10,11 @@ from qutip import basis, mesolve, Qobj, ket2dm
 
 # Define the graph
 seed = 42
-# G = nx.erdos_renyi_graph(n=50, p=0.1, seed=seed)
+G = nx.erdos_renyi_graph(n=8, p=0.5, seed=seed)
 # print(G.number_of_edges())
 
 # G = nx.path_graph(100)
-G = nx.cycle_graph(4)
+# G = nx.cycle_graph(4)
 #
 # G = nx.Graph()
 # nodes = [0, 1, 2, 3, 4]
@@ -53,7 +53,7 @@ print(initial_density_matrix)
 
 # Define the target state
 # target_state_index = random.choice(range(len(G.nodes)))
-target_state_index = 1
+target_state_index = 0
 target_state = basis_states[target_state_index]
 # print("Target state:", target_state_index, target_state)
 
@@ -87,13 +87,13 @@ for edge in G.edges():
 #     op3 = np.sqrt(r) * initial_state * basis(len(G.nodes), node).dag()
 #     jump_operators.append((Qobj(op3)))
 
-times = np.linspace(0.0, 60.0, 2000)
+times = np.linspace(0.0, 200.0, 20000)
 result = mesolve(H, initial_density_matrix, times, jump_operators, [])
 diagonal_elements = [[result.states[k].diag().real[i] for k in range(len(times))] for i in range(len(G.nodes))]
 # summed_diagonal = [sum(diags) for diags in zip(*diagonal_elements[:5])]
 fig, ax = plt.subplots()
 
-for i, diag in enumerate(diagonal_elements[:4]):
+for i, diag in enumerate(diagonal_elements[:len(G.nodes)]):
     ax.scatter(times, diag, label=f"Simulation Node {i+1}", s=4)  # s controls the size of the points
 
     # ax.plot(times, diag, linestyle='-', label=f"Simulation Node {i+1}", marker='o', markersize=2)
@@ -125,8 +125,8 @@ time_averaged_probabilities /= len(result.states)
 #     for tap in time_averaged_probabilities:
 #         f.write(f"{tap}\n")
 
-# data = np.column_stack((range(len(G.nodes)), time_averaged_probabilities))
-# np.savetxt('time_averaged_probabilities_quantum_no_search_decoherence.csv', data, delimiter=',', header='Node Index,Time-Averaged Probability', fmt='%d,%.6f', comments='')
+data = np.column_stack((range(len(G.nodes)), time_averaged_probabilities))
+np.savetxt('time_averaged_probabilities_quantum_no_search.csv', data, delimiter=',', header='Node Index,Time-Averaged Probability', fmt='%d,%.6f', comments='')
 
 # ax.plot(range(0, len(G.nodes)), time_averaged_probabilities, marker='o', linestyle='-')
 colors = plt.rcParams['axes.prop_cycle'].by_key()['color']

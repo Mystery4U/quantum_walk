@@ -3,13 +3,6 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
-        <entry key="\quantum_walk_data.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
         <entry key="\random_walk_data.csv">
           <value>
             <Attribute>
@@ -31,7 +24,21 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\time_averaged_probabilities_quantum_gamma_2.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\time_averaged_probabilities_quantum_superposition.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\time_averaged_probabilities_test.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
