@@ -7,10 +7,12 @@ import random
 import matplotlib.pyplot as plt
 import matplotlib
 from qutip import basis, mesolve, Qobj, ket2dm
+from scipy import sparse
+
 
 # Define the graph
 seed = 42
-G = nx.erdos_renyi_graph(n=8, p=0.5, seed=seed)
+G = nx.erdos_renyi_graph(n=10, p=0.5, seed=seed)
 # print(G.number_of_edges())
 
 # G = nx.path_graph(100)
@@ -62,10 +64,11 @@ gamma = 1
 epsilon = 0
 H_w = -1 * Qobj(target_state * target_state.dag())
 L = gamma * nx.normalized_laplacian_matrix(G)
+L = sparse.csr_matrix(L)  # Converts to a SciPy CSR sparse matrix
 # Two Hamiltonians are defined here, the first one 'converges' to the target state, the second one
 # is the usual normalized Laplacian
-# H = (1-epsilon) * (Qobj(L) + H_w)
-H = (1-epsilon) * Qobj(L)
+H = (1-epsilon) * (Qobj(L) + H_w)
+# H = (1-epsilon) * Qobj(L)
 A = nx.to_numpy_array(G)
 degree = np.sum(A, axis=1)
 # r = 0.5
@@ -87,7 +90,7 @@ for edge in G.edges():
 #     op3 = np.sqrt(r) * initial_state * basis(len(G.nodes), node).dag()
 #     jump_operators.append((Qobj(op3)))
 
-times = np.linspace(0.0, 200.0, 20000)
+times = np.linspace(0.0, 20.0, 20000)
 result = mesolve(H, initial_density_matrix, times, jump_operators, [])
 diagonal_elements = [[result.states[k].diag().real[i] for k in range(len(times))] for i in range(len(G.nodes))]
 # summed_diagonal = [sum(diags) for diags in zip(*diagonal_elements[:5])]
@@ -145,7 +148,7 @@ for idx, probability in enumerate(time_averaged_probabilities[:4]):
 
 plt.legend()
 plt.grid()
-# plt.savefig('quantum_walk_line_graph_5_pure_state')
+# plt.savefig('quantum_walk_cycle_graph_4_search')
 plt.show()
 
 
